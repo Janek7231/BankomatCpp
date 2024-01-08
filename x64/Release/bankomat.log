@@ -1,0 +1,21 @@
+﻿  Atm.cpp
+  Button.cpp
+  main.cpp
+D:\ProjektCpp\bankomat\main.cpp(88,13): warning C4326: zwracany typ "main" powinien być "int" zamiast "void"
+  MainMenu.cpp
+D:\ProjektCpp\bankomat\MainMenu.cpp(10,14): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
+          with
+          [
+              T=unsigned int
+          ]
+D:\ProjektCpp\bankomat\MainMenu.cpp(11,15): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
+          with
+          [
+              T=unsigned int
+          ]
+  Textbox.cpp
+  Trwa generowanie kodu
+  Previous IPDB not found, fall back to full compilation.
+  All 103 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Zakończono generowanie kodu
+  bankomat.vcxproj -> D:\ProjektCpp\bankomat\x64\Release\bankomat.exe

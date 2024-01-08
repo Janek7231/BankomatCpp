@@ -1,0 +1,2 @@
+D:\ProjektCpp\bankomat\x64\Debug\bankomat.exe
+D:\ProjektCpp\bankomat2\x64\Debug\bankomat.exe
