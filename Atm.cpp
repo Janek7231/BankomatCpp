@@ -310,6 +310,7 @@ void Atm::obsluga_przyciskow(RenderWindow& window, Event event) {
 			//std::cout << i << std::endl;
 			switch (screen_event) {
 			case screen_e::wloz_karte:
+				//card_in = false;
 				helper = nic;
 				break;
 			case screen_e::wprowadz_pin:
@@ -349,6 +350,7 @@ void Atm::obsluga_przyciskow(RenderWindow& window, Event event) {
 					screen_event = screen_e::wyplata;
 					break;
 				case 15:
+					card_in = false;
 					czysc_znaki();
 					screen_event = screen_e::wloz_karte;
 					break;

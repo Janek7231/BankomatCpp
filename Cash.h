@@ -7,7 +7,10 @@
 class Cash {
 public:
     std::vector<int> iloscBanknotow;
+    std::vector<int> iloscBanknotowTemp;
     std::vector<int> nominalyBanknotow;
+    std::vector<int> nominalyBanknotowTemp;
+    std::vector<int> pustyWektorInt;
 
     void wczytajDaneZPliku(const std::string& nazwaPliku);
     void wypiszIlosciNominalow() const;

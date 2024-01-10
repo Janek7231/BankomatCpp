@@ -10,6 +10,7 @@
 
 extern Cash cash;
 extern bool card_in;
+extern bool wydajemy;
 
 Card::Card(std::string filename, Font& font, Texture& texture, Vector2f pos)
 {
@@ -141,9 +142,14 @@ void Card::wyplata(char* wyp) {
 		sr += wyp[i];
 	}
 	isr = std::stof(sr);
-	cash.kwota_do_wydania(isr);
+	if (isr % 10 == 0 and balance >= isr) {
+		cash.kwota_do_wydania(isr);
+	}
+	else {
+		wydajemy = false;
+	}
 
-	if (isr % 10 == 0) {
+	if (wydajemy == true ) {
 		srodki = balance - isr;
 		std::ofstream zapis(sfilename);
 		zapis << srodki;

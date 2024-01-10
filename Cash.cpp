@@ -7,6 +7,7 @@
 #include <vector>
 
 extern Cash cash;
+bool wydajemy = true;
 //extern int screen_event;
 
 void Cash::wczytajDaneZPliku(const std::string& nazwaPliku) {
@@ -33,19 +34,29 @@ void Cash::wypiszIlosciNominalow() const {
 
 std::vector<int> Cash::algorytm_zachlanny(int kwota) {
     std::vector<int> wydaneBanknoty(iloscBanknotow.size(), 0); // Inicjalizacja wektora z iloœciami wydanych banknotów
-
+    std::vector<int> wydaneBanknotyTemp(iloscBanknotow.size(), 0);
+    std::vector<int> suma_w_banknotach(iloscBanknotow.size(), 0);
+    int kwota_temp = kwota;
     int suma = 0;
+    //int indeks;
+
     for (int i = 0; i < iloscBanknotow.size(); i++) {
+        suma_w_banknotach[i] = nominalyBanknotow[i] * iloscBanknotow[i];
         suma += nominalyBanknotow[i] * iloscBanknotow[i];
         std::cout << suma << std::endl;
     }
 
     if (kwota > suma) {
-        std::cout << "Nie mozna wydac kwoty " << kwota << ". Brak odpowiednich banknotow." << std::endl;
-        return wydaneBanknoty; // Zwracamy pusty wektor, bo nie mo¿na wydaæ ¿adnych banknotów
+        std::cout << "Nie mozna wydac kwoty " << kwota << ". Brak odpowiednich srodkow w bankomacie." << std::endl;
+        wydajemy = false;
+        return pustyWektorInt;
+        //return wydaneBanknoty; // Zwracamy pusty wektor, bo nie mo¿na wydaæ ¿adnych banknotów
     }
 
+    wydaneBanknotyTemp = wydaneBanknoty;
+    iloscBanknotowTemp = iloscBanknotow;
     for (int i = 0; i < iloscBanknotow.size(); i++) {
+        
         while (kwota >= nominalyBanknotow[i] && iloscBanknotow[i] > 0) {
             kwota -= nominalyBanknotow[i];
             wydaneBanknoty[i]++;
@@ -53,14 +64,50 @@ std::vector<int> Cash::algorytm_zachlanny(int kwota) {
         }
     }
 
+
     if (kwota > 0) {
-        std::cout << "Nie mozna dokladnie wydac kwoty " << kwota << ". Brak odpowiednich banknotow." << std::endl;
-        // Zwracamy czêœciowy wynik, ale mo¿emy te¿ zwróciæ pusty wektor lub podj¹æ inne decyzje zale¿nie od wymagañ
-        //return wydaneBanknoty; // Zwracamy pusty wektor, bo nie mo¿na wydaæ ¿adnych banknotów
-    } else {
+        wydajemy = false;
+        std::cout << "Nie mozna dokladnie wydac kwoty " << kwota << " pierwszym algorytmem. " << std::endl;
+        std::cout << "Sprawdzmy drugim algorytmem" << std::endl;
+        kwota = kwota_temp;
+        wydaneBanknoty = wydaneBanknotyTemp;
+        iloscBanknotow = iloscBanknotowTemp;
+
+        for (int i = 0; i < iloscBanknotow.size(); i++) {
+            while (kwota <= suma_w_banknotach[i] && kwota >= nominalyBanknotow[i]) {
+                //if (kwota <= suma_w_banknotach[i] && kwota >= nominalyBanknotow[i]) {
+                    std::cout << "Odejmujemy od: " << kwota << "nominal: " << nominalyBanknotow[i] << "\n";
+                    kwota -= nominalyBanknotow[i];
+                    suma_w_banknotach[i] -= nominalyBanknotow[i];
+                    wydaneBanknoty[i]++;
+                    iloscBanknotow[i]--;
+                    if (kwota == 0) {
+                        wydajemy = true;
+                        break;
+                    }
+            }
+            if (kwota == 0) {
+                wydajemy = true;
+                break;
+            }
+            else if (nominalyBanknotow[i] != 10 && kwota <= nominalyBanknotow[i + 1] && kwota <= suma_w_banknotach[i + 1] && iloscBanknotow[i] < iloscBanknotowTemp[i]) {
+                std::cout << "Dodajemy do: " << kwota << "odjety wczesniej nominal: " << nominalyBanknotow[i] << "\n";
+                kwota += nominalyBanknotow[i];
+                suma_w_banknotach[i] += nominalyBanknotow[i];
+                wydaneBanknoty[i]--;
+                iloscBanknotow[i]++;
+            }
+        }
+    } 
+   
+    if(wydajemy == true){
         zapiszDoPliku("banknoty.txt");
         std::cout << "Stan banknotow po wyplacie zaktualizowany." << std::endl;
         screen_event = screen_e::odbierz_karte;
+        wydajemy = true;
+    } else {
+        std::cout << "Nie mozna dokladnie wydac kwoty " << kwota << ". Brak odpowiednich banknotow." << std::endl;
+        return pustyWektorInt;
     }
 
     return wydaneBanknoty;
@@ -93,15 +140,19 @@ void Cash::kwota_do_wydania(int kwota) {
     int kwotaDoWydania = kwota;
     std::vector<int> wydaneBanknoty = algorytm_zachlanny(kwotaDoWydania);
 
-    std::cout << "Wydane banknoty dla kwoty " << kwotaDoWydania << " to:" << std::endl;
-    for (size_t i = 0; i < wydaneBanknoty.size(); ++i) {
-        if (wydaneBanknoty[i] > 0) {
-            std::cout << wydaneBanknoty[i] << " banknotow o nominale " << nominalyBanknotow[i] << std::endl;
+    if (wydajemy == true) {
+        std::cout << "Wydane banknoty dla kwoty " << kwotaDoWydania << " to:" << std::endl;
+        for (size_t i = 0; i < wydaneBanknoty.size(); ++i) {
+            if (wydaneBanknoty[i] > 0) {
+                std::cout << wydaneBanknoty[i] << " banknotow o nominale " << nominalyBanknotow[i] << std::endl;
+            }
         }
+        std::cout << "Stan banknotow po wyplacie:\n" << std::endl;
+        wypiszIlosciNominalow();
+    } else {
+        std::cout << "Stan banknotow po NIEUDANEJ wyplacie:\n" << std::endl;
+        wypiszIlosciNominalow();
     }
-
-    std::cout << "Stan banknotow po wyplacie:\n" << std::endl;
-    wypiszIlosciNominalow();
     wyczyscDane();
 }
 
