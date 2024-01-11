@@ -93,6 +93,8 @@ void drawStage(int stage) {
 		case dziekujemy:
 			bankomat.dziekujemy(window);
 			break;
+		case karta_zablokowana:
+			bankomat.karta_zablokowana(window);
 		}
 		break;
 	case informacje:
@@ -159,12 +161,14 @@ void updateInput() {
 				if (card.isMouseOver(window)) {
 					uzywana = &card;
 					if (screen_event == wloz_karte){
-						screen_event = wprowadz_pin;
-						//card_in = true;
+						if (card.blokada() == false) {
+							screen_event = wprowadz_pin;
+						}
+						else {
+							screen_event = karta_zablokowana;
+						}
+
 					}
-					
-					//tu napisaæ co siê stanie jak sie kliknie na karte
-					//std::cout << "click" << std::endl;
 					break;
 				}
 				if (card.isMouseOverOnCardhole(window) and screen_event == odbierz_karte) {
@@ -173,6 +177,11 @@ void updateInput() {
 					screen_event = dziekujemy;
 					cash_in = true;
 
+				}
+				if (card.isMouseOverOnCardhole(window) and screen_event == karta_zablokowana) {
+					helper = nic;
+					card_in = false;
+					screen_event = wloz_karte;
 				}
 				else if (card.isMouseOverOnCardhole(window) and screen_event == wloz_karte) {
 					helper = karty;

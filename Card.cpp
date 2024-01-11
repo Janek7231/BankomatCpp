@@ -14,17 +14,10 @@ extern bool wydajemy;
 
 Card::Card(std::string filename, Font& font, Texture& texture, Vector2f pos)
 {
-	std::ifstream file;
-	file.open(filename);
 	sfilename = filename;
+	pobierzDane(filename);
 	std::string numer = filename.substr(filename.size() - 21, 16);
 	cn = numer;
-	if (!file.is_open()) {
-		std::cout << "tarapaty" << std::endl;
-		return;
-	}
-
-	file >> balance;
 	for (int i = 0; i < 4; i++) {
 		pin[i] = filename[filename.size() - 4 + i];
 	}
@@ -60,6 +53,17 @@ bool Card::isMouseOver(RenderWindow& window) {
 	float btnyPosHeight = card.getPosition().y + card.getLocalBounds().height;
 
 	if (mouseX < btnxPosWidth and mouseX > btnPosX && mouseY < btnyPosHeight and mouseY > btnPosY) {
+		pobierzDane(sfilename);
+		std::cout << "\n\nNumer karty: " << sfilename << "\n";
+		std::cout << "Stan konta: " << balance << "\n";
+		std::cout << "blokada_dzienna: " << blokada_dzienna << "\n";
+		std::cout << "stan_dziennej_wyplaty: " << stan_dziennej_wyplaty << "\n";
+		std::cout << "Zostalo: " << ZostaloDzien() << "\n";
+		std::cout << "blokada_miesieczna: " << blokada_miesieczna << "\n";
+		std::cout << "stan_miesiecznej_wyplaty: " << stan_miesiecznej_wyplaty << "\n";
+		std::cout << "Zostalo: " << ZostaloMiesiac() << "\n";
+		std::cout << "Czy zablokowana: " << blockade << "\n";
+
 		std::string temp;
 		temp += pin[0];
 		temp += pin[1];
@@ -70,6 +74,54 @@ bool Card::isMouseOver(RenderWindow& window) {
 		return true;
 	}
 	return false;
+}
+
+void Card::pobierzDane(std::string filename) {
+	std::ifstream file;
+	file.open(filename);
+	sfilename = filename;
+	
+	if (!file.is_open()) {
+		std::cout << "Nie udalo sie otworzyc pliku!" << std::endl;
+		return;
+	}
+
+	file >> balance >> blokada_dzienna >> stan_dziennej_wyplaty >> blokada_miesieczna >> stan_miesiecznej_wyplaty >> blockade;
+	//std::cout << blokada_miesieczna << " " << blokada_dzienna << std::endl;
+	std::cout << blockade;
+	
+}
+
+void Card::zablokowanieKarty() {
+	blockade = 1;
+	std::ofstream zapis(sfilename);
+	zapis << balance << "\n" << blokada_dzienna << " " << stan_dziennej_wyplaty << "\n" << blokada_miesieczna << " " << stan_miesiecznej_wyplaty << "\n" << blockade;
+	zapis.close();
+}
+
+bool Card::blokada() {
+	if (blockade == 1) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+//double Card::maksymalnaWyplataDzienna() {
+//	return stan_dziennej_wyplaty;
+//}
+//double Card::maksymalnaWyplataMiesieczna() {
+//	return stan_miesiecznej_wyplaty;
+//}
+double Card::ZostaloDzien() {
+	double dostepneSaldo = blokada_dzienna - stan_dziennej_wyplaty;
+	return dostepneSaldo;
+}
+
+double Card::ZostaloMiesiac() {
+	double dostepneSaldo = blokada_miesieczna - stan_miesiecznej_wyplaty;
+	return dostepneSaldo;
 }
 
 bool Card::isMouseOverOnCardhole(RenderWindow& window) {
@@ -137,22 +189,38 @@ void Card::wyplata(char* wyp) {
 	float srodki = 0;
 	int isr = 0;
 	std::string sr;
-
 	for (int i = 0; i < sizeof(wyp); i++) {
 		sr += wyp[i];
 	}
 	isr = std::stof(sr);
+
+	srodki = balance - isr;
+	double limitD = stan_dziennej_wyplaty + isr;
+	double limitM = stan_miesiecznej_wyplaty + isr;
+	std::cout << "\n" << stan_dziennej_wyplaty << " <-D stan starego limitu M-> " << stan_miesiecznej_wyplaty;
+	std::cout << "\n" << isr << " <- wyplacana_kwota -> " << isr;
+	std::cout << "\n" << limitD << " <-D stan nowego limitu M-> " << limitM;
+
 	if (isr % 10 == 0 and balance >= isr) {
-		cash.kwota_do_wydania(isr);
+		if (limitD <= blokada_dzienna and limitM <= blokada_miesieczna) {
+			cash.kwota_do_wydania(isr);
+		}
+		else {
+			std::cout << "\nOsiagnieto limit dzienny lub miesieczny" << "\n";
+			wydajemy = false;
+		}
+		
 	}
 	else {
+		std::cout << "Brak srodkow na koncie lub podano nieodpowiednia kwote" << "\n";
 		wydajemy = false;
 	}
 
 	if (wydajemy == true ) {
-		srodki = balance - isr;
+		
+		//std::cout << ZostaloDzien() << " <- -> " << ZostaloMiesiac();
 		std::ofstream zapis(sfilename);
-		zapis << srodki;
+		zapis << srodki << "\n" << blokada_dzienna << " " << limitD << "\n" << blokada_miesieczna << " " << limitM << "\n" << blockade;
 		zapis.close();
 		balance = srodki;
 
@@ -163,7 +231,7 @@ void Card::wyplata(char* wyp) {
 		temp += pin[3];
 		bankomat.setInfo(card_nr.getString(), temp, std::to_string(balance));
 
-		std::cout << balance << " PLN" << std::endl;
+		std::cout << "\nStan konta: " << balance << " PLN" << std::endl;
 	}
 	
 }

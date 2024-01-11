@@ -1,4 +1,20 @@
-﻿  Card.cpp
-D:\ProjektCpp\bankomat2\Card.cpp(144,17): warning C4244: "=": konwersja z "float" do "int", możliwa utrata danych
-D:\ProjektCpp\bankomat2\Card.cpp(153,20): warning C4244: "=": konwersja z "long double" do "float", możliwa utrata danych
+﻿  Atm.cpp
+D:\ProjektCpp\bankomat2\Atm.cpp(599,7): warning C4101: "nowa_wczytana_kwota": lokalna zmienna, do której nie istnieje odwołanie
+  Card.cpp
+D:\ProjektCpp\bankomat2\Card.cpp(195,17): warning C4244: "=": konwersja z "float" do "int", możliwa utrata danych
+D:\ProjektCpp\bankomat2\Card.cpp(197,19): warning C4244: "=": konwersja z "long double" do "float", możliwa utrata danych
+  Cash.cpp
+  main.cpp
+D:\ProjektCpp\bankomat2\main.cpp(194,13): warning C4326: zwracany typ "main" powinien być "int" zamiast "void"
+D:\ProjektCpp\bankomat2\main.cpp(204,90): warning C4244: "argument": konwersja z "double" do "T", możliwa utrata danych
+          with
+          [
+              T=float
+          ]
+D:\ProjektCpp\bankomat2\main.cpp(204,73): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+          with
+          [
+              T=float
+          ]
+  Generowanie kodu...
   bankomat.vcxproj -> D:\ProjektCpp\bankomat2\x64\Debug\bankomat.exe

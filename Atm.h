@@ -21,7 +21,7 @@ extern int screen_event;
 
 enum screen_e
 {
-	wloz_karte, wprowadz_pin, operacje, wyplata, inna_kwota, zmiana_pin, dost_srodki, potwierdz_pin, niepop_pin, dziekujemy, odbierz_karte
+	wloz_karte, wprowadz_pin, operacje, wyplata, inna_kwota, zmiana_pin, dost_srodki, potwierdz_pin, niepop_pin, dziekujemy, odbierz_karte, karta_zablokowana
 };
 
 enum helper_e
@@ -52,6 +52,7 @@ public:
 	void zmiana_pin(RenderWindow& window);
 	void potwierdz_pin(RenderWindow& window);
 	void odbierz_karte(RenderWindow& window);
+	void karta_zablokowana(RenderWindow& window);
 	void dziekujemy(RenderWindow& window);
 	//void czy_chcesz(RenderWindow& window);
 	//void brak_zasobow(RenderWindow& window);
@@ -98,4 +99,6 @@ private:
 	int ilosc_z = 0;
 	int n_znak = 0;
 	float ikwota = 0;
+
+	int proby = 0;
 };

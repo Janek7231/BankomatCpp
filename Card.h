@@ -11,6 +11,11 @@ private:
 	char zmien_pin[4];
 	char temp_pin[4];
 	long double balance;
+	double blokada_dzienna;
+	double stan_dziennej_wyplaty;
+	double blokada_miesieczna;
+	double stan_miesiecznej_wyplaty;
+	int blockade;
 	Sprite card;
 	Text card_nr;
 	std::string cn;
@@ -26,6 +31,14 @@ public:
 	void setBalance(sf::Text& writing);
 	void wyplata(char *wyp);
 	//void wplata(char *wp);
+	double maksymalnaWyplataDzienna();
+	double maksymalnaWyplataMiesieczna();
+	double ZostaloDzien();
+	double ZostaloMiesiac();
+
+	bool blokada();
+	void zablokowanieKarty();
+	void pobierzDane(std::string filename);
 };
 
 

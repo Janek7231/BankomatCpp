@@ -125,6 +125,9 @@ Atm::Atm(RenderWindow& window_d, float width, float height)
 	writing[25].setString("   DZIEKUJEMY\nI ZAPRASZAMY PONOWNIE");
 	writing[25].setPosition(250, 250);
 
+	writing[26].setString("KARTA ZABLOKOWANA");
+	writing[26].setPosition(250, 290);
+
 }
 Atm::~Atm() {
 	//delete word;
@@ -221,7 +224,7 @@ void Atm::Buttons() {
 		else if (i > 6 and i < 10){
 			n = 3;
 		}
-		buttons[i] = Button(std::string(1,'0' + i), Vector2f(50,50), 40, Color::Black, {float(110 + (i - 1) % 3 * 60), float(450 + 60*n)}, font, btnTexture1);//ilosc, char '0' to numer char w tabeli ascii, + 1 
+		buttons[i] = Button(std::string(1,'0' + i), Vector2f(50,50), 40, Color::Black, {float(110 + (i - 1) % 3 * 60), float(450 + 60*n)}, font, btnTexture1);//ilosc, char '0' to numer char w tabeli ascii, + i
 	}
 	buttons[0] = Button(std::string(1, '0'), Vector2f(50, 50), 40, Color::Black, { 170, 690 }, font, btnTexture1);
 	buttons[18] = Button(std::string("C"), Vector2f(100, 50), 40, Color::Black, {290, 570}, font, btnTextureC);
@@ -249,6 +252,11 @@ void Atm::dziekujemy(RenderWindow& window) {
 
 void Atm::odbierz_karte(RenderWindow& window) {
 	window.draw(writing[24]);
+}
+
+void Atm::karta_zablokowana(RenderWindow& window) {
+	window.draw(writing[24]);
+	window.draw(writing[26]);
 }
 
 void Atm::wloz_karte(RenderWindow& window){
@@ -321,6 +329,8 @@ void Atm::obsluga_przyciskow(RenderWindow& window, Event event) {
 				}
 				switch(i){
 				case 17:
+					helper = nic;
+					card_in = false;
 					czysc_znaki();
 					screen_event = screen_e::wloz_karte;
 					break;
@@ -335,7 +345,13 @@ void Atm::obsluga_przyciskow(RenderWindow& window, Event event) {
 						czysc_znaki();
 					}
 					else {
+						proby++;
 						czysc_znaki();
+						if (proby == 3) {
+							uzywana->zablokowanieKarty();
+							proby = 0;
+							screen_event = screen_e::karta_zablokowana;
+						}
 					}
 					break;
 				}
@@ -524,6 +540,8 @@ void Atm::obsluga_przyciskow(RenderWindow& window, Event event) {
 				break;
 			case screen_e::dziekujemy:
 
+				break;
+			case screen_e::karta_zablokowana:
 				break;
 			}
 		}
