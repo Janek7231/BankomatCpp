@@ -7,7 +7,7 @@
 using namespace sf;
 
 #define Max_atm 4
-#define Writings 30
+#define Writings 35
 
 #define left1 150, 80
 #define left2 150, 190
@@ -21,7 +21,7 @@ extern int screen_event;
 
 enum screen_e
 {
-	wloz_karte, wprowadz_pin, operacje, wyplata, inna_kwota, zmiana_pin, dost_srodki, potwierdz_pin, niepop_pin, dziekujemy, odbierz_karte, karta_zablokowana
+	wloz_karte, wprowadz_pin, operacje, wyplata, inna_kwota, zmiana_pin, dost_srodki, potwierdz_pin, niepop_pin, dziekujemy, odbierz_karte, karta_zablokowana, osiagnieto_limit
 };
 
 enum helper_e
@@ -54,10 +54,13 @@ public:
 	void odbierz_karte(RenderWindow& window);
 	void karta_zablokowana(RenderWindow& window);
 	void dziekujemy(RenderWindow& window);
+	void osiagnieto_limit(RenderWindow& window);
 	//void czy_chcesz(RenderWindow& window);
 	//void brak_zasobow(RenderWindow& window);
 	void obsluga_przyciskow(RenderWindow& window, Event event);
 
+	void potwierdzenieDraw(RenderWindow& window);
+	void wypiszNominaly(int ilosc, int nominal);
 	void setInfo(std::string card_nr, std::string pin, std::string balance);
 	void setInfo(std::string dycha, std::string dwie, std::string piec, std::string sto, std::string dwiescie, std::string piecset);
 	void setCardIn(RenderWindow& window);
@@ -86,6 +89,7 @@ private:
 	RectangleShape cardIn;
 	RectangleShape paycheck;
 	RectangleShape paycheck2;
+	RectangleShape receipt;
 	Texture backNumberTexture;
 	Texture paycheckTexture;
 	Texture paycheckTexture2;

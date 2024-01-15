@@ -7,6 +7,11 @@ using namespace sf;
 class Card
 {
 private:
+	struct Data {
+		int rok;
+		int miesiac;
+		int dzien;
+	};
 	char pin[4];
 	char zmien_pin[4];
 	char temp_pin[4];
@@ -20,6 +25,13 @@ private:
 	Text card_nr;
 	std::string cn;
 	std::string sfilename;
+
+	std::string dataMies;
+	std::string dataDzien;
+	std::string dataTeraz;
+
+	std::time_t czasTeraz;
+	std::tm* lokalnyCzas;
 public:
 	Card(std::string filename, Font& font, Texture& texture, Vector2f pos);
 	void drawCard(RenderWindow& window);
@@ -30,14 +42,18 @@ public:
 	bool sprawdzZmienPIN(char *wczytany, char* wczytany_temp);
 	void setBalance(sf::Text& writing);
 	void wyplata(char *wyp);
-	//void wplata(char *wp);
 	double maksymalnaWyplataDzienna();
 	double maksymalnaWyplataMiesieczna();
 	double ZostaloDzien();
 	double ZostaloMiesiac();
 
 	bool blokada();
+	void sprawdzDatyLimitu(Data& dataD, Data& dataM, Data& dataT);
+	std::string obecnaData();
+	void zapiszLimitDzienny(std::string dataDzisiaj, std::string dataDzien, std::string dataMiesiac);
+	void zapiszLimitMiesieczny(std::string dataDzisiaj, std::string dataDzien, std::string dataMiesiac);
 	void zablokowanieKarty();
+	void pobierzDane(std::string filename, Data& dataD, Data& dataM, Data& dataT);
 	void pobierzDane(std::string filename);
 };
 

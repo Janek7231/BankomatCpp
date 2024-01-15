@@ -5,10 +5,12 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <string>
 
 extern Cash cash;
-bool wydajemy = true;
-//extern int screen_event;
+extern Atm bankomat;
+extern Text writing;
+bool wydajemy = false;
 
 void Cash::wczytajDaneZPliku(const std::string& nazwaPliku) {
     std::ifstream plik(nazwaPliku);
@@ -27,9 +29,13 @@ void Cash::wczytajDaneZPliku(const std::string& nazwaPliku) {
 }
 
 void Cash::wypiszIlosciNominalow() const {
+    std::string napis;
     for (size_t i = 0; i < iloscBanknotow.size(); ++i) {
-        std::cout << "Nominal: " << nominalyBanknotow[i] << "zl, Ilosc sztuk: " << iloscBanknotow[i] << std::endl;
+        std::cout << "Nominal: " << nominalyBanknotow[i] << " PLN, Ilosc sztuk: " << iloscBanknotow[i] << std::endl;
+        //bankomat.wypiszNominaly(nominalyBanknotow[i], iloscBanknotow[i]);
     }
+    
+    
 }
 
 std::vector<int> Cash::algorytm_zachlanny(int kwota) {

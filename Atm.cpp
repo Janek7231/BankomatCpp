@@ -23,7 +23,7 @@ Atm::Atm(RenderWindow& window_d, float width, float height)
 	//float height = window.getSize().y;
 	word[0].setFont(font);
 	word[0].setFillColor(Color::White);
-	word[0].setString("Informacje o karcie:");
+	word[0].setString("Karty do wyboru:");//"Informacje o karcie:"
 	word[0].setCharacterSize(30);
 	word[0].setPosition(width - 550, 20);
 
@@ -128,15 +128,27 @@ Atm::Atm(RenderWindow& window_d, float width, float height)
 	writing[26].setString("KARTA ZABLOKOWANA");
 	writing[26].setPosition(250, 290);
 
+	writing[27].setString("Potwierdzenie");
+	writing[27].setFillColor(Color::Black);
+	
+	writing[28].setString("OSIAGNIETO LIMIT \nDZIENNY LUB MIESIECZNY");
+	writing[28].setPosition(250, 290);
+
+	writing[29].setString("Nominal:    Ilosc: ");
+	writing[29].setFillColor(Color::Black);
+	//writing[29].setPosition();
+	writing[30].setString("Razem:\n");
+	writing[30].setFillColor(Color::Black);
 }
 Atm::~Atm() {
 	//delete word;
 }
 
 void Atm::drawInfo(RenderWindow& window) {
+	window.draw(word[0]);
 	for (int i = 0; i < Max_atm; i++)
 	{
-		window.draw(word[i]);
+		//window.draw(word[i]);
 	}
 }
 
@@ -163,6 +175,31 @@ void Atm::setCashIn(RenderWindow& window){
 	paycheckTexture2.loadFromFile("sbopen.png");
 	paycheck2.setTexture(&paycheckTexture2);
 	window.draw(paycheck2);
+}
+
+void Atm::potwierdzenieDraw(RenderWindow& window) {
+	receipt.setSize(Vector2f(300, 440));
+	receipt.setPosition(Vector2f(200, 100));
+	receipt.setFillColor(Color::White);
+	window.draw(receipt);
+
+	float xPos = (receipt.getGlobalBounds().width - 20);
+	float yPos = (receipt.getGlobalBounds().height - 300);
+	writing[27].setPosition(xPos, yPos);
+	window.draw(writing[27]);
+	writing[29].setPosition(xPos - 50, yPos + 50);
+	writing[29].setCharacterSize(20);
+	window.draw(writing[29]);
+	writing[30].setPosition(xPos + 100, yPos + 300);
+	window.draw(writing[30]);
+}
+
+std::string napis = "Nominal:   Ilosc: ";
+void Atm::wypiszNominaly(int ilosc, int nominal) {
+	
+	napis += nominal + " PLN    " + ilosc + '\n';
+
+	writing[29].setString(napis);
 }
 
 void Atm::draw_atm(RenderWindow& window) {
@@ -203,6 +240,7 @@ void Atm::draw_atm(RenderWindow& window) {
 	{
 		buttons[i].drawTo(window);
 	}
+	//potwierdzenieDraw(window);
 }
 
 void Atm::Buttons() {
@@ -231,8 +269,6 @@ void Atm::Buttons() {
 	buttons[19] = Button(std::string("E"), Vector2f(100, 50), 40, Color::Black, {290, 630}, font, btnTextureE);
 	buttons[20] = Button(std::string("A"), Vector2f(100, 50), 40, Color::Black, {290, 510}, font, btnTextureA);
 
-	//buttons[21] = Button(std::string(" "), Vector2f(100, 50), 40, Color::Transparent, { 290, 630 }, font, btnTextureE);
-	//buttons[22] = Button(std::string(" "), Vector2f(100, 50), 40, Color::Black, { 290, 630 }, font, btnTextureE);
 
 	for (int i = 10; i < 18; i++) 
 	{
@@ -244,6 +280,11 @@ void Atm::Buttons() {
 		}
 		buttons[i] = Button(std::string(1,' '), Vector2f(50, 50), 40, Color::Black, {float(80 + 490 * n), float(90 + (i - 2) % 4 * 90)}, font, btnTexture1);
 	}
+}
+
+void Atm::osiagnieto_limit(RenderWindow& window) {
+	window.draw(writing[28]);
+	window.draw(writing[8]);
 }
 
 void Atm::dziekujemy(RenderWindow& window) {
@@ -312,14 +353,56 @@ void Atm::obsluga_przyciskow(RenderWindow& window, Event event) {
 	if (screen_event == screen_e::dziekujemy and cash.isMouseOverOnCashhole(window, 450, 600, 670, 700)) {
 		cash_in = false;
 		screen_event = screen_e::wloz_karte;
+	} 
+	//if (screen_event == screen_e::wprowadz_pin and buttons[17].isMouseOver(window)) {
+	//	screen_event = screen_e::odbierz_karte;
+	//}
+	if (screen_event == screen_e::operacje and buttons[15].isMouseOver(window)) {
+		window.setSize(sf::Vector2u(1440 / 2 - 20, 810));
+		sf::View widok(sf::FloatRect(0, 0, 1440 / 2 - 20, 810));
+		window.setView(widok);
+		screen_event = screen_e::odbierz_karte;
 	}
+
+	/*int mouseX = Mouse::getPosition(window).x;
+	int mouseY = Mouse::getPosition(window).y;
+	std::cout << "x: " << mouseX << ", y: " << mouseY << "\n";*/
+
+	if (helper == nic) {
+		window.setSize(sf::Vector2u(1440, 810));
+		sf::View widok(sf::FloatRect(0, 0, 1440, 810));
+		window.setView(widok);
+	}
+	else if (helper == nic and screen_e::wloz_karte) {
+		window.setSize(sf::Vector2u(1440, 810));
+		sf::View widok(sf::FloatRect(0, 0, 1440, 810));
+		window.setView(widok);
+	}
+	else {
+		window.setSize(sf::Vector2u(1440/2-20, 810));
+		sf::View widok(sf::FloatRect(0, 0, 1440/2-20, 810));
+		window.setView(widok);
+	}
+	
 	for (int i = 0; i < 21; i++) {
 		if (buttons[i].isMouseOver(window)) {
 			//std::cout << i << std::endl;
 			switch (screen_event) {
 			case screen_e::wloz_karte:
-				//card_in = false;
-				helper = nic;
+				switch (i) {
+				case 17:
+					helper = nic;
+					czysc_znaki();
+					break;
+				}
+				break;
+			case screen_e::osiagnieto_limit:
+				switch (i) {
+				case 17:
+					czysc_znaki();
+					screen_event = screen_e::wyplata;
+					break;
+				}
 				break;
 			case screen_e::wprowadz_pin:
 				if (i <= 9 and i >= 0) {
@@ -330,9 +413,9 @@ void Atm::obsluga_przyciskow(RenderWindow& window, Event event) {
 				switch(i){
 				case 17:
 					helper = nic;
-					card_in = false;
+					//card_in = false;
 					czysc_znaki();
-					screen_event = screen_e::wloz_karte;
+					screen_event = screen_e::odbierz_karte;
 					break;
 				case 18:
 					usun_znak();
@@ -366,9 +449,10 @@ void Atm::obsluga_przyciskow(RenderWindow& window, Event event) {
 					screen_event = screen_e::wyplata;
 					break;
 				case 15:
-					card_in = false;
+					//card_in = false;
+					helper = nic;
 					czysc_znaki();
-					screen_event = screen_e::wloz_karte;
+					screen_event = screen_e::odbierz_karte;
 					break;
 				case 16:
 					screen_event = screen_e::zmiana_pin;
@@ -542,6 +626,8 @@ void Atm::obsluga_przyciskow(RenderWindow& window, Event event) {
 
 				break;
 			case screen_e::karta_zablokowana:
+				break;
+			case screen_e::odbierz_karte:
 				break;
 			}
 		}

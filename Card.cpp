@@ -7,6 +7,10 @@
 #include "Atm.h"
 #include <fstream>
 #include <string>
+#include <sstream>
+#include <ctime>
+#include <iomanip>
+#pragma warning(disable : 4996)
 
 extern Cash cash;
 extern bool card_in;
@@ -14,13 +18,18 @@ extern bool wydajemy;
 
 Card::Card(std::string filename, Font& font, Texture& texture, Vector2f pos)
 {
+	
+	Data dataD, dataM, dataTeraz;
+	
 	sfilename = filename;
-	pobierzDane(filename);
+	pobierzDane(filename, dataD, dataM, dataTeraz);
 	std::string numer = filename.substr(filename.size() - 21, 16);
 	cn = numer;
 	for (int i = 0; i < 4; i++) {
 		pin[i] = filename[filename.size() - 4 + i];
 	}
+
+
 
 	card.setTexture(texture);
 	card.setScale(0.75, 0.75);
@@ -76,27 +85,108 @@ bool Card::isMouseOver(RenderWindow& window) {
 	return false;
 }
 
-void Card::pobierzDane(std::string filename) {
+void Card::pobierzDane(std::string filename, Data& dataD, Data& dataM, Data& dataT) {
 	std::ifstream file;
 	file.open(filename);
 	sfilename = filename;
-	
+
 	if (!file.is_open()) {
 		std::cout << "Nie udalo sie otworzyc pliku!" << std::endl;
 		return;
 	}
 
-	file >> balance >> blokada_dzienna >> stan_dziennej_wyplaty >> blokada_miesieczna >> stan_miesiecznej_wyplaty >> blockade;
-	//std::cout << blokada_miesieczna << " " << blokada_dzienna << std::endl;
-	std::cout << blockade;
-	
+	file >> balance >> blokada_dzienna >> stan_dziennej_wyplaty >> dataDzien >> blokada_miesieczna >> stan_miesiecznej_wyplaty >> dataMies >> blockade;
+	//std::cout << dataDzien << " " << dataMies << std::endl;
+	//std::cout << blockade;
+
+	//sprawdz daaty limitu
+	std::istringstream strumien(dataDzien);
+	char separator;
+
+	strumien >> dataD.dzien >> separator >> dataD.miesiac >> separator >> dataD.rok;
+	if (strumien.fail() || strumien.peek() != EOF) {
+		std::cerr << "B³¹d podczas parsowania daty." << std::endl;
+	}
+	std::istringstream strumien2(dataMies);
+	strumien2 >> dataM.dzien >> separator >> dataM.miesiac >> separator >> dataM.rok;
+	if (strumien2.fail() || strumien2.peek() != EOF) {
+		std::cerr << "B³¹d podczas parsowania daty." << std::endl;
+	}
+	// Pobierz aktualny czas
+	dataTeraz = obecnaData();
+	std::istringstream strumien1(dataTeraz);
+	strumien1 >> dataT.dzien >> separator >> dataT.miesiac >> separator >> dataT.rok;
+	if (strumien1.fail() || strumien1.peek() != EOF) {
+		std::cerr << "B³¹d podczas parsowania daty." << std::endl;
+	}
+
+	//sprawdzam limity
+	if (dataD.dzien == dataT.dzien and dataD.miesiac == dataT.miesiac and dataD.rok == dataT.rok) {
+		std::cout << "W tym dniu juz wybierales\n";
+	}
+	else {
+		zapiszLimitDzienny(dataTeraz, dataDzien, dataMies);
+	}
+
+	if (dataM.miesiac == dataT.miesiac and dataM.rok == dataT.rok) {
+		std::cout << "W tym miesiacu juz wybierales\n";
+	}
+	else {
+		zapiszLimitMiesieczny(dataTeraz, dataDzien, dataMies);
+	}
+}
+
+void Card::zapiszLimitDzienny(std::string dataDzisiaj, std::string dataDzien, std::string dataMiesiac) {
+	stan_dziennej_wyplaty = 0;
+	std::ofstream zapis(sfilename);
+	zapis << balance << "\n" << blokada_dzienna << " " << stan_dziennej_wyplaty << " " << dataDzisiaj << "\n" << blokada_miesieczna << " " << stan_miesiecznej_wyplaty << " " << dataMiesiac << "\n" << blockade;
+	//zapis << balance << "\n" << blokada_dzienna << " " << stan_dziennej_wyplaty << " " << dataDzien << "\n" << blokada_miesieczna << " " << stan_miesiecznej_wyplaty << " " << dataMies << "\n" << blockade;
+	zapis.close();
+}
+void Card::zapiszLimitMiesieczny(std::string dataDzisiaj, std::string dataDzien, std::string dataMiesiac) {
+	stan_miesiecznej_wyplaty = 0;
+	std::ofstream zapis(sfilename);
+	zapis << balance << "\n" << blokada_dzienna << " " << stan_dziennej_wyplaty << " " << dataDzien << "\n" << blokada_miesieczna << " " << stan_miesiecznej_wyplaty << " " << dataDzisiaj << "\n" << blockade;
+	zapis.close();
+}
+
+std::string Card::obecnaData() {
+	std::time_t czasTeraz = std::time(nullptr);//aktualny czas
+	std::tm* lokalnyCzas = std::localtime(&czasTeraz);//struktura tm
+	std::ostringstream strumien;//strumieñ do formatowania daty
+	//obecna data do strumienia w formacie "DD.MM.RRRR"
+	strumien << std::setw(2) << std::setfill('0') << lokalnyCzas->tm_mday << ".";
+	strumien << std::setw(2) << std::setfill('0') << lokalnyCzas->tm_mon + 1 << ".";
+	strumien << lokalnyCzas->tm_year + 1900;
+
+	return strumien.str();
+}
+
+void Card::pobierzDane(std::string filename) {
+	std::ifstream file;
+	file.open(filename);
+	sfilename = filename;
+
+
+
+	if (!file.is_open()) {
+		std::cout << "Nie udalo sie otworzyc pliku!" << std::endl;
+		return;
+	}
+
+	file >> balance >> blokada_dzienna >> stan_dziennej_wyplaty >> dataDzien >> blokada_miesieczna >> stan_miesiecznej_wyplaty >> dataMies >> blockade;
+	//std::cout << dataDzien << " " << dataMies << std::endl;
+	//std::cout << blockade;
 }
 
 void Card::zablokowanieKarty() {
 	blockade = 1;
 	std::ofstream zapis(sfilename);
-	zapis << balance << "\n" << blokada_dzienna << " " << stan_dziennej_wyplaty << "\n" << blokada_miesieczna << " " << stan_miesiecznej_wyplaty << "\n" << blockade;
-	zapis.close();
+	zapis << balance << "\n" << blokada_dzienna << " " << stan_dziennej_wyplaty << " " << dataDzien << "\n" << blokada_miesieczna << " " << stan_miesiecznej_wyplaty << " " << dataMies << "\n" << blockade;zapis.close();
+}
+
+void Card::sprawdzDatyLimitu(Data& dataD, Data& dataM, Data& dataTeraz) {
+	
 }
 
 bool Card::blokada() {
@@ -108,12 +198,6 @@ bool Card::blokada() {
 	}
 }
 
-//double Card::maksymalnaWyplataDzienna() {
-//	return stan_dziennej_wyplaty;
-//}
-//double Card::maksymalnaWyplataMiesieczna() {
-//	return stan_miesiecznej_wyplaty;
-//}
 double Card::ZostaloDzien() {
 	double dostepneSaldo = blokada_dzienna - stan_dziennej_wyplaty;
 	return dostepneSaldo;
@@ -203,9 +287,11 @@ void Card::wyplata(char* wyp) {
 
 	if (isr % 10 == 0 and balance >= isr) {
 		if (limitD <= blokada_dzienna and limitM <= blokada_miesieczna) {
+			wydajemy = true;
 			cash.kwota_do_wydania(isr);
 		}
 		else {
+			screen_event = osiagnieto_limit;
 			std::cout << "\nOsiagnieto limit dzienny lub miesieczny" << "\n";
 			wydajemy = false;
 		}
@@ -220,7 +306,8 @@ void Card::wyplata(char* wyp) {
 		
 		//std::cout << ZostaloDzien() << " <- -> " << ZostaloMiesiac();
 		std::ofstream zapis(sfilename);
-		zapis << srodki << "\n" << blokada_dzienna << " " << limitD << "\n" << blokada_miesieczna << " " << limitM << "\n" << blockade;
+		zapis << srodki << "\n" << blokada_dzienna << " " << limitD << " " << dataDzien << "\n" << blokada_miesieczna << " " << limitM << " " << dataMies << "\n" << blockade;
+		//zapis << srodki << "\n" << blokada_dzienna << " " << limitD << "\n" << blokada_miesieczna << " " << limitM << "\n" << blockade;
 		zapis.close();
 		balance = srodki;
 
