@@ -61,7 +61,7 @@ bool Card::isMouseOver(RenderWindow& window) {
 	float btnxPosWidth = card.getPosition().x + card.getLocalBounds().width;
 	float btnyPosHeight = card.getPosition().y + card.getLocalBounds().height;
 
-	if (mouseX < btnxPosWidth and mouseX > btnPosX && mouseY < btnyPosHeight and mouseY > btnPosY) {
+	if (mouseX < btnxPosWidth and mouseX > btnPosX and mouseY < btnyPosHeight and mouseY > btnPosY) {
 		pobierzDane(sfilename);
 		std::cout << "\n\nNumer karty: " << sfilename << "\n";
 		std::cout << "Stan konta: " << balance << "\n";
@@ -218,7 +218,7 @@ bool Card::isMouseOverOnCardhole(RenderWindow& window) {
 	float btnxPosWidth = 670;
 	float btnyPosHeight = 520;
 
-	if (mouseX < btnxPosWidth and mouseX > btnPosX && mouseY < btnyPosHeight and mouseY > btnPosY) {
+	if (mouseX < btnxPosWidth and mouseX > btnPosX and mouseY < btnyPosHeight and mouseY > btnPosY) {
 		return true;
 	}
 	return false;

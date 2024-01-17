@@ -113,7 +113,8 @@ void drawStage(int stage) {
 }
 
 void updateInput() {
-	
+
+
 	Event event;
 	while (window.pollEvent(event))
 	{
@@ -123,11 +124,11 @@ void updateInput() {
 		}
 		if (event.type == Event::KeyReleased)
 		{
-			if (event.key.code == Keyboard::Escape && stage == mMenu)
+			if (event.key.code == Keyboard::Escape and stage == mMenu)
 			{
 				window.close();
 			}
-			if (event.key.code == Keyboard::Escape && stage != mMenu)
+			if (event.key.code == Keyboard::Escape and stage != mMenu)
 			{
 				//stage = mMenu;
 				window.close();
@@ -202,6 +203,9 @@ void updateInput() {
 					screen_event = wloz_karte;
 				}
 				else if (card.isMouseOverOnCardhole(window) and screen_event == wloz_karte) {
+					window.setSize(sf::Vector2u(1440, 810));
+					sf::View widok(sf::FloatRect(0, 0, 1440, 810));
+					window.setView(widok);
 					helper = karty;
 				}
 			}
@@ -216,7 +220,6 @@ void main() {
 	Texture card1;
 	card1.loadFromFile("karta_red.png");
 
-
 	int i = 0;
 	for (auto next : fs::directory_iterator("karty/")){
 		cards.emplace_back(next.path().string(), font, card1, sf::Vector2f(750+(300*(i%2)), 200+(200* floor(i/2))));
@@ -226,6 +229,7 @@ void main() {
 	sf::View widok(sf::FloatRect(0, 0, 1440 / 2 - 20, 810));
 	window.setView(widok);
 	window.setFramerateLimit(40);
+
 	while (window.isOpen())
 	{
 		updateInput();

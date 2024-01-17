@@ -44,7 +44,7 @@ bool Button::isMouseOver(RenderWindow& window) {
 	float btnxPosWidth = button.getPosition().x + button.getLocalBounds().width;
 	float btnyPosHeight = button.getPosition().y + button.getLocalBounds().height;
 
-	if (mouseX < btnxPosWidth && mouseX > btnPosX && mouseY < btnyPosHeight && mouseY > btnPosY) {
+	if (mouseX < btnxPosWidth and mouseX > btnPosX and mouseY < btnyPosHeight and mouseY > btnPosY) {
 		return true;
 	}
 	return false;
