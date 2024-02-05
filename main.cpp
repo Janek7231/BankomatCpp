@@ -11,7 +11,6 @@
 
 using namespace sf;
 namespace fs = std::filesystem;
-//using namespace std;
 
 std::vector<Card>cards;//tablica dynamiczna typu card
 
@@ -113,8 +112,6 @@ void drawStage(int stage) {
 }
 
 void updateInput() {
-
-
 	Event event;
 	while (window.pollEvent(event))
 	{
@@ -163,10 +160,6 @@ void updateInput() {
 		}
 		if (event.type == Event::MouseButtonPressed and stage == start)
 		{
-			/*int mouseX = Mouse::getPosition(window).x;
-			int mouseY = Mouse::getPosition(window).y;
-			std::cout << "x: " << mouseX << ", y: " << mouseY << "\n";*/
-
 			bankomat.obsluga_przyciskow(window, event);
 
 			for (auto &card : cards) {// card to ka¿dy indeks tablicy ":" dzia³a jak "in"
@@ -185,16 +178,14 @@ void updateInput() {
 				}
 				if (card.isMouseOverOnCardhole(window) and screen_event == odbierz_karte) {
 					if (wydajemy == true) {
-						//helper = nic;
 						card_in = false;
 						screen_event = dziekujemy;
 						cash_in = true;
 					}
-					else if (wydajemy == false){
-						//helper = nic;
+					else if (cash_in == false){
 						card_in = false;
-						cash_in = false;
 						screen_event = wloz_karte;
+						//cash_in = false;
 					}
 				}
 				else if (card.isMouseOverOnCardhole(window) and screen_event == karta_zablokowana) {
@@ -216,9 +207,9 @@ void updateInput() {
 void main() {
 	bankomat.Buttons();
 	Font font;
-	font.loadFromFile("Anonymous_Pro.ttf");
+	font.loadFromFile("Textury/Anonymous_Pro.ttf");
 	Texture card1;
-	card1.loadFromFile("karta_red.png");
+	card1.loadFromFile("Textury/karta_red.png");
 
 	int i = 0;
 	for (auto next : fs::directory_iterator("karty/")){

@@ -36,10 +36,6 @@ public:
 	void drawInfo(RenderWindow& window);
 	void draw_atm(RenderWindow& window);
 	void Buttons();
-	/*int AtmPressed() {
-		return AtmSelected;
-	}
-	*/
 	~Atm();
 
 	void wloz_karte(RenderWindow& window);
@@ -55,8 +51,6 @@ public:
 	void karta_zablokowana(RenderWindow& window);
 	void dziekujemy(RenderWindow& window);
 	void osiagnieto_limit(RenderWindow& window);
-	//void czy_chcesz(RenderWindow& window);
-	//void brak_zasobow(RenderWindow& window);
 	void obsluga_przyciskow(RenderWindow& window, Event event);
 
 	void potwierdzenieDraw(RenderWindow& window);
@@ -73,7 +67,6 @@ public:
 	void wpisz_kwote(char znak);
 private:
 	Button buttons[30];
-	//int AtmSelected;
 	Font font;
 	Texture btnTexture1;
 	Texture btnTextureE;

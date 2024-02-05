@@ -3,7 +3,7 @@
 MainMenu::MainMenu(RenderWindow& window_d) 
 	: window(window_d)
 {
-	if (!font.loadFromFile("Anonymous_Pro_B.ttf")) 
+	if (!font.loadFromFile("Textury/Anonymous_Pro_B.ttf")) 
 	{
 		std::cout << "Nie znaleziono czcionki" << std::endl;
 	}
@@ -44,7 +44,7 @@ void MainMenu::draw(RenderWindow& window, float width, float height) {
 	RectangleShape background;
 	background.setSize(Vector2f(width, height));
 	Texture Maintexture;
-	Maintexture.loadFromFile("banknotyMenu.png");
+	Maintexture.loadFromFile("Textury/banknotyMenu.png");
 	background.setTexture(&Maintexture);
 	window.draw(background);
 

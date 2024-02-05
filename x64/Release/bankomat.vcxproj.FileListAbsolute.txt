@@ -1,1 +1,2 @@
 D:\ProjektCpp\bankomat\x64\Release\bankomat.exe
+D:\ProjektCpp\BankomatDoOddania\x64\Release\bankomat.exe

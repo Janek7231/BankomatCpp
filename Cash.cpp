@@ -66,28 +66,6 @@ std::vector<int> Cash::algorytm_zachlanny(int kwota) {
         //return wydaneBanknoty; // Zwracamy pusty wektor, bo nie mo¿na wydaæ ¿adnych banknotów
     }
 
-    /////////////////////////////////////////////pomyyyyysss
-    //int max = 0;
-    //for (auto n : iloscBanknotow) {
-    //    if (n > max) {
-    //        max = n;
-    //    }
-    //}
-    //std::cout << "najwieksza ilosc banknotow: " << max << std::endl;
-    //
-    //for (int i = 1;i <= max; i++) {
-    //    std::vector<int> przekazany(6);
-    //    for (int j = 0; j < przekazany.size(); j++) {
-    //        przekazany[j] = float(iloscBanknotow[j]) / float(max) * float(i);
-    //    }
-    //    auto wynik = iteracja(kwota, przekazany, nominalyBanknotow);
-    //    if (wynik.size() != 0) {
-    //        return wynik;
-    //    }
-    //    return wynik;
-    //}
-
-
     int kwota_temp = kwota;
     wydaneBanknotyTemp = wydaneBanknoty;
     iloscBanknotowTemp = iloscBanknotow;
@@ -162,63 +140,6 @@ std::vector<int> Cash::algorytm_zachlanny(int kwota) {
             }
         }
     }
-    ///////////////////////////////////////////////////////////////////////////////////nieudany pomysl
-    //if (wydajemy == false) {
-    //    std::cout << "Nie mozna dokladnie wydac kwoty " << kwota << " pierwszym algorytmem. " << std::endl;
-    //    std::cout << "Sprawdzmy 3 algorytmem" << std::endl;
-    //    kwota = kwota_temp;
-    //    std::cout << "Kwota dla 3 proby: " << kwota << "\n";
-    //    wydaneBanknoty = wydaneBanknotyTemp;
-    //    iloscBanknotow = iloscBanknotowTemp;
-    //    int kwotaWydania = 0;
-    //    int kwotaWydaniaTemp = 1;
-    //    int powtorzenie = 0;
-
-    //    for (int n = iloscBanknotow.size()-1; n >= 0; n--) {
-    //        while (nominalyBanknotow[n] <= kwota and iloscBanknotow[n] > 0 or wydaneBanknoty[n] > 0)
-    //        {
-    //            if(kwotaWydania > kwota){
-    //                for (int m = iloscBanknotow.size() - 1; m >= 0; m--) {
-    //                    while (wydaneBanknoty[m] > 0 and kwotaWydania > kwota) {
-    //                        std::cout << kwotaWydania << " - " << nominalyBanknotow[n] << "\n";
-    //                        kwotaWydania -= nominalyBanknotow[m];
-    //                        suma_w_banknotach[m] += nominalyBanknotow[m];
-    //                        wydaneBanknoty[m]--;
-    //                        iloscBanknotow[m]++;
-    //                    }
-    //                }
-    //            }
-    //            else if (iloscBanknotow[n] == 0) {
-    //                n--;
-    //                break;
-    //            }
-    //            else if (kwotaWydania < kwota and powtorzenie < 3/*kwotaWydania != kwotaWydaniaTemp*/) {
-    //                /*if(kwotaWydaniaTemp = kwotaWydania){
-    //                    powtorzenie++;
-    //                }*/
-    //                std::cout <<  kwotaWydania << " + " << nominalyBanknotow[n] << "\n";
-    //                kwotaWydania += nominalyBanknotow[n];
-    //                suma_w_banknotach[n] -= nominalyBanknotow[n];
-    //                wydaneBanknoty[n]++;
-    //                iloscBanknotow[n]--;
-
-    //            }
-    //            else if (kwotaWydania == kwota){
-    //                std::cout << "Udalo sie, kwotaWydania = kwocie\n";
-    //                wydajemy = true;
-    //                break;
-    //            }
-    //        }
-    //    }
-    //}
-
-
-
-
-
-
-
-
 
     if(wydajemy == true){
         zapiszDoPliku("banknoty.txt");
@@ -231,10 +152,6 @@ std::vector<int> Cash::algorytm_zachlanny(int kwota) {
 
     return wydaneBanknoty;
 }
-
-//std::vector<int> Cash::algorytm_dynamiczny(int kwta) {
-//
-//}
 
 void Cash::zapiszDoPliku(const std::string& nazwaPliku) const {
     std::ofstream plik(nazwaPliku);

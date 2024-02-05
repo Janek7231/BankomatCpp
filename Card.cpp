@@ -96,8 +96,6 @@ void Card::pobierzDane(std::string filename, Data& dataD, Data& dataM, Data& dat
 	}
 
 	file >> balance >> blokada_dzienna >> stan_dziennej_wyplaty >> dataDzien >> blokada_miesieczna >> stan_miesiecznej_wyplaty >> dataMies >> blockade;
-	//std::cout << dataDzien << " " << dataMies << std::endl;
-	//std::cout << blockade;
 
 	//sprawdz daaty limitu
 	std::istringstream strumien(dataDzien);
@@ -167,8 +165,6 @@ void Card::pobierzDane(std::string filename) {
 	file.open(filename);
 	sfilename = filename;
 
-
-
 	if (!file.is_open()) {
 		std::cout << "Nie udalo sie otworzyc pliku!" << std::endl;
 		return;
@@ -183,10 +179,6 @@ void Card::zablokowanieKarty() {
 	blockade = 1;
 	std::ofstream zapis(sfilename);
 	zapis << balance << "\n" << blokada_dzienna << " " << stan_dziennej_wyplaty << " " << dataDzien << "\n" << blokada_miesieczna << " " << stan_miesiecznej_wyplaty << " " << dataMies << "\n" << blockade;zapis.close();
-}
-
-void Card::sprawdzDatyLimitu(Data& dataD, Data& dataM, Data& dataTeraz) {
-	
 }
 
 bool Card::blokada() {
@@ -266,7 +258,7 @@ bool Card::sprawdzZmienPIN(char* wczytany, char* wczytany_temp) {
 }
 
 void Card::setBalance(sf::Text &writing) {
-	writing.setString("DOSTEPNE SRODKI:\n   " + std::to_string(balance));
+	writing.setString("DOSTEPNE SRODKI:\n   " + std::to_string(float(balance)));
 }
 
 void Card::wyplata(char* wyp) {
@@ -304,7 +296,6 @@ void Card::wyplata(char* wyp) {
 
 	if (wydajemy == true ) {
 		
-		//std::cout << ZostaloDzien() << " <- -> " << ZostaloMiesiac();
 		std::ofstream zapis(sfilename);
 		zapis << srodki << "\n" << blokada_dzienna << " " << limitD << " " << dataDzien << "\n" << blokada_miesieczna << " " << limitM << " " << dataMies << "\n" << blockade;
 		//zapis << srodki << "\n" << blokada_dzienna << " " << limitD << "\n" << blokada_miesieczna << " " << limitM << "\n" << blockade;

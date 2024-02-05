@@ -1,3 +1,33 @@
-﻿  Cash.cpp
-D:\ProjektCpp\bankomat2\Cash.cpp(146,20): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
-  bankomat.vcxproj -> D:\ProjektCpp\bankomat2\x64\Debug\bankomat.exe
+﻿  Atm.cpp
+D:\ProjektCpp\BankomatDoOddania\Atm.cpp(666,7): warning C4101: "nowa_wczytana_kwota": lokalna zmienna, do której nie istnieje odwołanie
+  Button.cpp
+  Card.cpp
+D:\ProjektCpp\BankomatDoOddania\Card.cpp(271,17): warning C4244: "=": konwersja z "float" do "int", możliwa utrata danych
+D:\ProjektCpp\BankomatDoOddania\Card.cpp(273,19): warning C4244: "=": konwersja z "long double" do "float", możliwa utrata danych
+  Cash.cpp
+D:\ProjektCpp\BankomatDoOddania\Cash.cpp(123,20): warning C4267: "inicjowanie": konwersja z "size_t" do "int", możliwa utrata danych
+  MainMenu.cpp
+D:\ProjektCpp\BankomatDoOddania\MainMenu.cpp(10,14): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
+          with
+          [
+              T=unsigned int
+          ]
+D:\ProjektCpp\BankomatDoOddania\MainMenu.cpp(11,15): warning C4244: "inicjowanie": konwersja z "T" do "float", możliwa utrata danych
+          with
+          [
+              T=unsigned int
+          ]
+  main.cpp
+D:\ProjektCpp\BankomatDoOddania\main.cpp(207,13): warning C4326: zwracany typ "main" powinien być "int" zamiast "void"
+D:\ProjektCpp\BankomatDoOddania\main.cpp(216,90): warning C4244: "argument": konwersja z "double" do "T", możliwa utrata danych
+          with
+          [
+              T=float
+          ]
+D:\ProjektCpp\BankomatDoOddania\main.cpp(216,73): warning C4244: "argument": konwersja z "int" do "T", możliwa utrata danych
+          with
+          [
+              T=float
+          ]
+  Generowanie kodu...
+  bankomat.vcxproj -> D:\ProjektCpp\BankomatDoOddania\x64\Debug\bankomat.exe

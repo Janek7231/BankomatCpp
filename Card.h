@@ -48,7 +48,6 @@ public:
 	double ZostaloMiesiac();
 
 	bool blokada();
-	void sprawdzDatyLimitu(Data& dataD, Data& dataM, Data& dataT);
 	std::string obecnaData();
 	void zapiszLimitDzienny(std::string dataDzisiaj, std::string dataDzien, std::string dataMiesiac);
 	void zapiszLimitMiesieczny(std::string dataDzisiaj, std::string dataDzien, std::string dataMiesiac);
